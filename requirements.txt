@@ -1,0 +1,16 @@
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+
+torch
+transformers
+datasets
+
+shap
+lime
+
+streamlit 
+
+pyyaml     
