@@ -14,17 +14,11 @@ env/
 .vscode/
 .idea/
 
-
-.DS_Store
-Thumbs.db
-
-
 .pytest_cache/
 .mypy_cache/
 .cache/
 
 
-models/
 src/models/*.joblib
 
 
