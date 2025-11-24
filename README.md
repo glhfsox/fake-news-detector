@@ -1,78 +1,56 @@
-# Fake News Detector (Baseline: TF-IDF + Logistic Regression)
+# Fake News Detector
 
-This repository contains a simple baseline model for fake news detection.
-The goal is to classify news articles as **REAL** or **FAKE** based on their text.
+Classifies news articles as **REAL** or **FAKE**. Two model versions:
+- Baseline: TF‑IDF + Logistic Regression
+- V2: DistilBERT (transformer)
 
-The current version includes:
-- data preparation script (merging True/Fake CSVs, creating train/val/test),
-- baseline model: TF-IDF + Logistic Regression,
-- a simple CLI tool for interactive predictions.
-
----
-
-## Project structure
-
+## Structure
 fake-news-detector/
   data/
-    raw/
-      True.csv        # original real news dataset
-      Fake.csv        # original fake news dataset
-    processed/
-      train.csv       # prepared train split
-      val.csv         # prepared validation split
-      test.csv        # prepared test split
+    raw/          # True.csv, Fake.csv
+    processed/    # train.csv, val.csv, test.csv (created by prepare.py)
   src/
-    data/
-      prepare.py      # data loading, merging, splitting into train/val/test
-    models/
-      baseline.py     # training and evaluation of TF-IDF + LogisticRegression
-      predict_baseline.py  # CLI for interactive predictions
-  .venv/              # (optional) virtual environment, not tracked by git
-  README.md
+    data/prepare.py                # data prep + split
+    models/baseline.py             # baseline training/eval
+    models/predict_baseline.py     # baseline CLI predictions
+    models/transformers.py         # DistilBERT training
+    models/predict_transformer.py  # DistilBERT CLI predictions
   requirements.txt
+  README.md
 
+## Requirements
+- Python 3.10+
+- Install deps: `pip install -r requirements.txt`
+- Optional: virtual env `.venv/`
 
-Requirements
+## Data preparation
+1) Place raw datasets:
+   - `data/raw/True.csv`
+   - `data/raw/Fake.csv`
+2) Create splits: `python -m src.data.prepare`
+   - Outputs: `data/processed/train.csv`, `val.csv`, `test.csv`.
 
-Python 3.10+ (recommended)
+## Training
+- Baseline (TF‑IDF + LogisticRegression):
+  `python -m src.models.baseline`
+  - Saves `src/models/baseline_tfidf_logreg.joblib`.
+- DistilBERT:
+  `python -m src.models.transformers`
+  - Saves model + tokenizer to `src/models/transformer-distilbert`.
 
-pip (or other package manager)
+## Predictions (CLI)
+- Baseline: `python -m src.models.predict_baseline`
+- DistilBERT: `python -m src.models.predict_transformer`
+  - Labels: 0 → REAL, 1 → FAKE.
+  - max_length=256 with padding/truncation.
+  - Uses CUDA if available, otherwise CPU.
 
-Python dependencies (can be installed via requirements.txt):
+## Quick test (sample texts)
+- REAL: “NASA successfully launches a new Earth‑observation satellite designed to improve climate change monitoring and wildfire detection, with the first images expected within two weeks.”
+- FAKE: “Власти США официально признали, что все новости последних пяти лет были сгенерированы искусственным интеллектом, и рекомендуют гражданам перестать читать СМИ.”
+Run both CLIs and compare REAL/FAKE probabilities on these two texts.
 
-pandas
-
-numpy
-
-scikit-learn
-
-joblib
-
-Data preparation
-
-Place the original datasets in: 
-
-data/raw/True.csv
-data/raw/Fake.csv
-
-
-Notes and limitations
-
-This is a baseline model based on TF-IDF and Logistic Regression.
-
-The model classifies texts by style and vocabulary, not by checking facts.
-
-It is trained on a specific fake/real news dataset (True.csv / Fake.csv), so behavior on other domains may differ.
-
-Future versions will include transformer-based models (e.g. DistilBERT) and a web interface.
-
-
-## Version 2: DistilBERT classifier
-
-- Training: `python -m src.models.transformers` (saves model and tokenizer to `src/models/transformer-distilbert`).
-- Interactive predictions: `python -m src.models.predict_transformer`.
-
-Notes:
-- Labels: 0 → REAL, 1 → FAKE.
-- Uses max_length=256 and pads/truncates to that length.
-- Runs on GPU if CUDA, otherwise CPU.
+## Notes
+- The model does not fact‑check; it learns dataset style/vocabulary.
+- Behavior may differ on other domains.
+- `src/models/transformer-distilbert/`, `.venv/`, data, and caches are in `.gitignore` to avoid committing artifacts.
