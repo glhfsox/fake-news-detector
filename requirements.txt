@@ -14,3 +14,14 @@ lime
 streamlit 
 
 pyyaml     
+
+
+pandas
+numpy
+scikit-learn
+joblib
+
+torch
+transformers
+datasets
+accelerate

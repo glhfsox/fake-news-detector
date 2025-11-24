@@ -26,7 +26,7 @@ def load_split(path : str) -> Tuple[pd.Series , pd.Series]:
     return x , y 
 
 def build_pipeline() -> Pipeline:
-
+    #setting up hyperparameters 
     vectorizer = TfidfVectorizer(
         max_features=50000,
         ngram_range=(1, 2),
@@ -63,8 +63,8 @@ def train_and_eval() -> None:
         acc = accuracy_score(y_true , y_pred)
         f1 = f1_score(y_true , y_pred , average="macro")
         print(f"\n === {split_name} Metrics ===")
-        print(f"Accuracy : {acc * 100:.3f} %")
-        print(f"F1 Macro : {f1 * 100:.3f} %")
+        print(f"Accuracy : {acc * 100:.4f} %")
+        print(f"F1 Macro : {f1 * 100:.4f} %")
         print(classification_report(y_true, y_pred))
  
 

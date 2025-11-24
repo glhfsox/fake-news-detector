@@ -27,7 +27,7 @@ def predict_text(model , text : str):
 
     if not text.strip():
         raise ValueError("Empty text . Please enter something")
-
+    
     probs = model.predict_proba([text])[0]
     pred_label = int(model.predict([text])[0])
 
@@ -46,11 +46,11 @@ def main() :
     model = load_model()
 
     print("\nFake News Baseline (TF-IDF + Logistic Regression)")
-    print("Enter the next of your news . 'q' or enter for escaping.\n")
+    print("Enter the next of your news . 'q' or 'quit' for escaping.\n")
 
     while True:
         text = input("News: ").strip()
-        if text.lower() in {"q" , "quit" ,"exit"} or text=="":
+        if text.lower() in {"q" , "quit" ,"exit"} or text =="":
             print("Escaping..")
             break
         try:
@@ -62,7 +62,12 @@ def main() :
         print(f"\nPredicted class : {label_name} (label = {label})")
         print(f"Probability of REAL {real_p * 100:.3f} %")
         print(f"Probability of FAKE: {fake_p * 100:.3f} %")
-
+        
+        
+        again = input("Do you want to try one more time? (y/n)").strip().lower()
+        if again not in {"y", "yes"}:
+            print("Exiting...")
+            break
 
 if __name__ == "__main__":
     main()
