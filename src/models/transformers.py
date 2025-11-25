@@ -1,7 +1,8 @@
 import os
 from functools import partial
 from typing import Any, Dict
-
+import json
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import torch
@@ -44,7 +45,7 @@ def tokenize_batch(examples : Dict[str , Any] , hf_tokenizer) -> Dict[str , Any]
     return hf_tokenizer (
         examples["full_text"],
         truncation=True,
-        max_length = 256, # i think would perfectly fit for the typical size news 
+        max_length = 512, # i think would perfectly fit for the typical size news 
         padding = "max_length"
     )
 
@@ -103,7 +104,7 @@ def printing_metrics(name : str , metrics : Dict[str , Any]) -> None:
     print("===  Printing Metrics === ")
     
     if loss is not None : 
-        print("\n===  Loss  ===  , {loss:.4f}")
+        print(f"\n===  Loss  ===  , {loss * 100:.4f}")
     if acc is not None :
         print(f"\n===  Accuracy ===  , {acc * 100:.3f} %")
     if f1 is not None : 
@@ -156,7 +157,7 @@ def train_and_eval() -> None:
     training_args = TrainingArguments(
         output_dir=os.path.join(TRANSFORMER_DIR, "checkpoints"),
         num_train_epochs=2,
-        per_device_train_batch_size=8,
+        per_device_train_batch_size=32,
         per_device_eval_batch_size=8,
         learning_rate=5e-5,
         eval_strategy="epoch",
@@ -184,9 +185,22 @@ def train_and_eval() -> None:
     print("Started training ... ")
     trainer.train()
 
+    metrics = { 
+        "log_history" : trainer.state.log_history,
+        "train" : train_metrics,
+        "eval" : eval_metrics,
+        "test" : test_metrics,
+    }
+
+    out_dir = Path(TRANSFORMER_DIR)
+    out_dir.mkdir(parents=True , exist_ok = True)
+    metrics_path = out_dir/"metrics.json"
+    with metrics_path.open("w") as f:
+        json.dump(metrics , f , indent=2)
+    print(f"Saved metrics to {metrics_path}")
+        
     train_metrics = trainer.evaluate(eval_dataset=hf_train_dataset)
     printing_metrics("TRAIN" , train_metrics)
-    
     eval_metrics = trainer.evaluate(eval_dataset=hf_val_dataset)
     printing_metrics("VAL" , eval_metrics)
     
