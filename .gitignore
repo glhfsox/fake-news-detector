@@ -30,3 +30,5 @@ logs/
 *.log
 
 src/models/transformer-distilbert/
+
+src/models/transformer-distilbert/metrics.json
