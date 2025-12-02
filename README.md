@@ -27,6 +27,12 @@ Sources used now (adjust in `src/data/prepare.py`):
   - Labels: 0 → REAL, 1 → FAKE
   - Uses CUDA if available, otherwise CPU
 
+## Web UI.
+- Run: `streamlit run src/ui/fake_news_app.py`
+  - Left: text area for pasting news.
+  - Right: circular gauge showing FAKE probability and REAL/FAKE percentages.
+  - Below: words more typical for FAKE highlighted red, for REAL highlighted green.
+
 ## Quick test texts
 REAL:
 - “The European Space Agency confirmed its JUICE probe performed a gravity assist around Earth and will reach Jupiter’s moons in 2031 as planned.”
