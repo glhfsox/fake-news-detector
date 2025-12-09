@@ -37,6 +37,6 @@ Sources used now (adjust in `src/data/prepare.py`):
 REAL:
 - “The European Space Agency confirmed its JUICE probe performed a gravity assist around Earth and will reach Jupiter’s moons in 2031 as planned.”
 - “NASA’s James Webb Telescope captured new infrared images of Saturn’s rings, revealing temperature variations that could explain seasonal changes.”
-FAKE:
+  FAKE:
 - “Scientists at MIT announced a handheld device that can turn any tap water directly into gasoline, ending the need for fuel stations.”
 - “The World Health Organization secretly approved a plan to replace all vaccines with microchip implants by 2025, according to leaked documents.”
