@@ -185,6 +185,14 @@ def train_and_eval() -> None:
     print("Started training ... ")
     trainer.train()
 
+    train_metrics = trainer.evaluate(eval_dataset=hf_train_dataset)
+    printing_metrics("TRAIN" , train_metrics)
+    eval_metrics = trainer.evaluate(eval_dataset=hf_val_dataset)
+    printing_metrics("VAL" , eval_metrics)
+    
+    test_metrics = trainer.evaluate(eval_dataset=hf_test_dataset)
+    printing_metrics("TEST" , test_metrics)
+    
     metrics = { 
         "log_history" : trainer.state.log_history,
         "train" : train_metrics,
@@ -199,14 +207,6 @@ def train_and_eval() -> None:
         json.dump(metrics , f , indent=2)
     print(f"Saved metrics to {metrics_path}")
         
-    train_metrics = trainer.evaluate(eval_dataset=hf_train_dataset)
-    printing_metrics("TRAIN" , train_metrics)
-    eval_metrics = trainer.evaluate(eval_dataset=hf_val_dataset)
-    printing_metrics("VAL" , eval_metrics)
-    
-    test_metrics = trainer.evaluate(eval_dataset=hf_test_dataset)
-    printing_metrics("TEST" , test_metrics)
-    
      
     print(f"\n Saving model and tokenizer to: {TRANSFORMER_DIR}")
     os.makedirs(TRANSFORMER_DIR, exist_ok=True)
